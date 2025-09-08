@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -123,4 +122,17 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Panel Providers
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the service providers for your admin panel. These
+    | providers will be loaded on the admin panel's request lifecycle.
+    |
+    */
+
+    'admin_panel' => [
+        App\Providers\Filament\adminPanelProvider::class,
+    ],
 ];
