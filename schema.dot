@@ -1,20 +1,53 @@
-digraph madrasa_db {
-    rankdir=LR;
-    node [shape=record, fontname="Helvetica", fontsize=10];
-
-    students [label="{ students | student_id PK\l session\l class\l student_type\l gender\l residence_status\l name\l father_name\l mother_name\l date_of_birth\l nid_birth_no\l nationality\l blood_group\l identification_sign\l financial_condition\l created_at\l }"];
-
-    student_contacts [label="{ student_contacts | contact_id PK\l student_id FK\l relation\l phone_number\l }"];
-
-    addresses [label="{ addresses | address_id PK\l student_id FK\l address_type\l village\l post_office\l thana\l district\l }"];
-
-    fees [label="{ fees | fee_id PK\l fee_type\l name\l default_amount\l }"];
-
-    student_fees [label="{ student_fees | payment_id PK\l student_id FK\l fee_id FK\l amount\l payment_date\l }"];
-
-    # Relationships
-    students -> student_contacts [label="1..*"];
-    students -> addresses [label="1..*"];
-    students -> student_fees [label="1..*"];
-    fees -> student_fees [label="1..*"];
+digraph madrasa_management_er {
+    // Graph configuration
+    rankdir=TB;
+    node [shape=record, style=filled, fontname="Arial", fontsize=10];
+    edge [color=darkblue, fontsize=9];
+    
+    // Main entity - Students
+    students [
+        label="{students|student_id (PK)\l|session\l|class\l|student_type (new/old)\l|gender (male/female)\l|residence_status (resident/non-resident)\l|name\l|father_name\l|mother_name\l|date_of_birth\l|nid_birth_no\l|nationality (default: Bangladeshi)\l|blood_group\l|guardian_phone\l|sms_number\l|created_at\l|updated_at\l}",
+        fillcolor=yellow
+    ];
+    
+    // Related entities
+    addresses [
+        label="{addresses|address_id (PK)\l|student_id (FK)\l|address_type (permanent/present)\l|village\l|post_office\l|thana\l|district\l|created_at\l|updated_at\l}",
+        fillcolor=lightcyan
+    ];
+    
+    fees [
+        label="{fees|id (PK)\l|student_id (FK)\l|admit_form_fee (decimal 10,2)\l|id_card (decimal 10,2)\l|admission_fee (decimal 10,2)\l|created_at\l|updated_at\l}",
+        fillcolor=lightcyan
+    ];
+    
+    // Authentication & System tables
+    users [
+        label="{users|id (PK)\l|name\l|email (unique)\l|email_verified_at\l|password\l|remember_token\l|created_at\l|updated_at\l}",
+        fillcolor=lightgreen
+    ];
+    
+    // Primary relationships
+    students -> addresses [label="1:N", color=red, penwidth=2];
+    students -> fees [label="1:1", color=red, penwidth=2];
+    
+    // System relationships
+    users -> users [label="Admin Access", style=dashed];
+    
+    // Grouping for better visualization
+    subgraph cluster_main {
+        label="Core Entities";
+        style=filled;
+        fillcolor=lightyellow;
+        students;
+        addresses;
+        fees;
+    }
+    
+    subgraph cluster_auth {
+        label="Authentication";
+        style=filled;
+        fillcolor=lightgreen;
+        users;
+    }
 }
