@@ -225,31 +225,45 @@
         @if($student->addresses->count() > 0)
         <div class="address-section">
             <div class="section-title">Address Information</div>
-            @foreach($student->addresses as $address)
+            
+            @php
+                $presentAddress = $student->addresses->where('address_type', 'present')->first();
+                $permanentAddress = $student->addresses->where('address_type', 'permanent')->first();
+            @endphp
+            
+            @if($presentAddress)
                 <div class="info-item">
-                    <span class="info-label">Address {{ $loop->iteration }}:</span>
-                    <span class="info-value">{{ $address->full_address }}</span>
+                    <span class="info-label" style="color: #059669;">Present Address:</span>
+                    <span class="info-value">{{ $presentAddress->full_address }}</span>
                 </div>
-            @endforeach
+                <div style="margin-left: 150px; font-size: 11px; color: #666; margin-bottom: 10px;">
+                    Village: {{ $presentAddress->village }}, P.O: {{ $presentAddress->post_office }}, 
+                    Thana: {{ $presentAddress->thana }}, District: {{ $presentAddress->district }}
+                </div>
+            @endif
+            
+            @if($permanentAddress)
+                <div class="info-item">
+                    <span class="info-label" style="color: #dc2626;">Permanent Address:</span>
+                    <span class="info-value">{{ $permanentAddress->full_address }}</span>
+                </div>
+                <div style="margin-left: 150px; font-size: 11px; color: #666; margin-bottom: 10px;">
+                    Village: {{ $permanentAddress->village }}, P.O: {{ $permanentAddress->post_office }}, 
+                    Thana: {{ $permanentAddress->thana }}, District: {{ $permanentAddress->district }}
+                </div>
+            @endif
+            
+            @if(!$presentAddress && !$permanentAddress)
+                @foreach($student->addresses as $address)
+                    <div class="info-item">
+                        <span class="info-label">{{ ucfirst($address->address_type) }} Address:</span>
+                        <span class="info-value">{{ $address->full_address }}</span>
+                    </div>
+                @endforeach
+            @endif
         </div>
         @endif
-
-        <!-- Fee Information -->
-        @if($student->fees->count() > 0)
-        <div class="fee-section">
-            <div class="section-title">Fee Information</div>
-            @foreach($student->fees as $fee)
-                <div class="info-item">
-                    <span class="info-label">{{ ucfirst($fee->fee_type) }}:</span>
-                    <span class="info-value">৳{{ number_format($fee->total_fees, 2) }}</span>
-                </div>
-            @endforeach
-            <div class="info-item" style="border-top: 1px solid #e5e7eb; padding-top: 10px; margin-top: 10px; font-weight: bold;">
-                <span class="info-label">Total Fees:</span>
-                <span class="info-value">৳{{ number_format($student->fees->sum('amount'), 2) }}</span>
-            </div>
-        </div>
-        @endif
+        
 
         <!-- Footer -->
         <div class="footer">

@@ -15,37 +15,82 @@ class StudentsTable
     {
         return $table
             ->columns([
-                TextColumn::make('session')
-                    ->searchable(),
-                TextColumn::make('class'),
-                TextColumn::make('student_type'),
-                TextColumn::make('gender'),
-                TextColumn::make('residence_status'),
                 TextColumn::make('name')
-                    ->searchable(),
+                    ->label('Full Name')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold')
+                    ->size('lg'),
+                TextColumn::make('student_id')
+                    ->label('Student ID')
+                    ->searchable()
+                    ->badge()
+                    ->color('success'),
+                TextColumn::make('class')
+                    ->badge()
+                    ->color('info'),
+                TextColumn::make('gender')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'male' => 'blue',
+                        'female' => 'pink',
+                        default => 'gray',
+                    }),
+                TextColumn::make('student_type')
+                    ->label('Type')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => ucfirst(str_replace('_', ' ', $state))),
+                TextColumn::make('residence_status')
+                    ->label('Residence')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'residential' => 'success',
+                        'day_scholar' => 'warning',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn (string $state): string => ucfirst(str_replace('_', ' ', $state))),
+                TextColumn::make('session')
+                    ->searchable()
+                    ->toggleable(),
                 TextColumn::make('father_name')
-                    ->searchable(),
-                TextColumn::make('mother_name')
-                    ->searchable(),
+                    ->label('Father\'s Name')
+                    ->searchable()
+                    ->toggleable(),
                 TextColumn::make('date_of_birth')
-                    ->date()
-                    ->sortable(),
-                TextColumn::make('nid_birth_no')
-                    ->searchable(),
-                TextColumn::make('nationality')
-                    ->searchable(),
-                TextColumn::make('blood_group')
-                    ->searchable(),
+                    ->label('Date of Birth')
+                    ->date('d M Y')
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('guardian_phone')
-                    ->searchable(),
+                    ->label('Guardian Phone')
+                    ->searchable()
+                    ->toggleable()
+                    ->copyable(),
+                TextColumn::make('mother_name')
+                    ->label('Mother\'s Name')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('blood_group')
+                    ->label('Blood Group')
+                    ->badge()
+                    ->color('danger')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('nationality')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('nid_birth_no')
+                    ->label('NID/Birth No')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('sms_number')
-                    ->searchable(),
+                    ->label('SMS Number')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Enrolled At')
+                    ->dateTime('d M Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Last Updated')
+                    ->dateTime('d M Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
