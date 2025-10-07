@@ -67,6 +67,11 @@ class Student extends Model
         return $this->hasOne(Fee::class, 'student_id', 'student_id');
     }
 
+    public function results(): HasMany
+    {
+        return $this->hasMany(Result::class, 'student_id', 'student_id');
+    }
+
     // Accessor methods
     public function getPermanentAddressAttribute()
     {
