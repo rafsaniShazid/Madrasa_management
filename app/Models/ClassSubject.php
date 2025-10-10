@@ -10,7 +10,7 @@ class ClassSubject extends Model
     protected $table = 'class_subject';
     
     protected $fillable = [
-        'class',
+        'class_id',
         'subject_id',
         'is_active',
     ];
@@ -20,6 +20,11 @@ class ClassSubject extends Model
     ];
 
     // Relationships
+    public function schoolClass(): BelongsTo
+    {
+        return $this->belongsTo(SchoolClass::class, 'class_id');
+    }
+
     public function subject(): BelongsTo
     {
         return $this->belongsTo(Subject::class);
@@ -31,15 +36,15 @@ class ClassSubject extends Model
         return $query->where('is_active', true);
     }
 
-    public function scopeForClass($query, $class)
+    public function scopeForClass($query, $classId)
     {
-        return $query->where('class', $class);
+        return $query->where('class_id', $classId);
     }
 
     // Get subjects for a specific class
-    public static function getSubjectsForClass($class)
+    public static function getSubjectsForClass($classId)
     {
-        return static::where('class', $class)
+        return static::where('class_id', $classId)
             ->where('is_active', true)
             ->with('subject')
             ->get();

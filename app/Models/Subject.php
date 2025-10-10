@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Subject extends Model
 {
@@ -29,9 +30,17 @@ class Subject extends Model
     }
 
     // Many-to-many relationship with classes through pivot table
+    public function schoolClasses(): BelongsToMany
+    {
+        return $this->belongsToMany(SchoolClass::class, 'class_subject', 'subject_id', 'class_id')
+            ->withPivot('is_active')
+            ->withTimestamps();
+    }
+
+    // Backward compatibility - keep old relationship name
     public function classes()
     {
-        return $this->hasMany(ClassSubject::class);
+        return $this->schoolClasses();
     }
 
     // Scope for active subjects
@@ -41,10 +50,10 @@ class Subject extends Model
     }
 
     // Get subjects for a specific class
-    public function scopeForClass($query, $class)
+    public function scopeForClass($query, $classId)
     {
-        return $query->whereHas('classes', function($q) use ($class) {
-            $q->where('class', $class)->where('is_active', true);
+        return $query->whereHas('schoolClasses', function($q) use ($classId) {
+            $q->where('class_id', $classId)->where('is_active', true);
         });
     }
 
@@ -52,5 +61,11 @@ class Subject extends Model
     public function getPassPercentageAttribute(): float
     {
         return ($this->pass_marks / $this->total_marks) * 100;
+    }
+
+    // Accessor for title (used by Filament)
+    public function getTitleAttribute(): string
+    {
+        return $this->name;
     }
 }

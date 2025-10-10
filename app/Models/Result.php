@@ -94,12 +94,17 @@ class Result extends Model
     }
 
 
-
     // Automatically calculate and save percentage and status
     public function updateCalculatedFields(): void
     {
         $this->percentage = $this->calculatePercentage();
         $this->status = $this->calculateStatus();
         $this->save();
+    }
+
+    // Custom title for Filament
+    public function getTitleAttribute(): string
+    {
+        return "{$this->student->name} - {$this->exam->name} - {$this->subject->name}";
     }
 }

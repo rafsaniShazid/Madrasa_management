@@ -13,16 +13,13 @@ return new class extends Migration
     {
         Schema::create('class_subject', function (Blueprint $table) {
             $table->id();
-            $table->enum('class', [
-                'play', 'nursery', 'first', 'second', 'third', 'fourth',
-                'nazira', 'hifzul_quran'
-            ]);
+            $table->foreignId('class_id')->constrained('school_classes')->onDelete('cascade');
             $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
             
             // Ensure unique combination: one subject per class
-            $table->unique(['class', 'subject_id']);
+            $table->unique(['class_id', 'subject_id']);
         });
     }
 

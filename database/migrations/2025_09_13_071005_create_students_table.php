@@ -11,10 +11,7 @@ return new class extends Migration
         Schema::create('students', function (Blueprint $table) {
             $table->id('student_id');
             $table->string('session');
-            $table->enum('class', [
-                'play', 'nursery', 'first', 'second', 'third', 'fourth',
-                'nazira', 'hifzul_quran'
-            ]);
+            $table->foreignId('class_id')->constrained('school_classes')->onDelete('restrict');
             $table->enum('student_type', ['new', 'old']);
             $table->enum('gender', ['male', 'female']);
             $table->enum('residence_status', ['resident', 'non-resident']);

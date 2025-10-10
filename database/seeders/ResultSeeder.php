@@ -27,12 +27,12 @@ class ResultSeeder extends Seeder
         foreach ($students as $student) {
             foreach ($completedExams as $exam) {
                 // Only create results for exams matching student's class
-                if ($exam->class !== $student->class) {
+                if ($exam->class_id !== $student->class_id) {
                     continue;
                 }
                 
                 // Get subjects for this class
-                $classSubjects = ClassSubject::where('class', $exam->class)
+                $classSubjects = ClassSubject::where('class_id', $exam->class_id)
                     ->where('is_active', true)
                     ->with('subject')
                     ->get();

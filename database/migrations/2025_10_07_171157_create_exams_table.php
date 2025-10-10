@@ -14,10 +14,7 @@ return new class extends Migration
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
             $table->string('name'); // e.g., "First Term Exam 2024"
-            $table->enum('class', [
-                'play', 'nursery', 'first', 'second', 'third', 'fourth',
-                'nazira', 'hifzul_quran'
-            ]);
+            $table->foreignId('class_id')->constrained('school_classes')->onDelete('restrict');
             $table->string('session'); // e.g., "2024-2025"
             $table->date('exam_date');
             $table->enum('type', [ 'first_term', 'second_term', 'final']);

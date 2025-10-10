@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Student extends Model
 {
@@ -12,7 +13,7 @@ class Student extends Model
     
     protected $fillable = [
         'session',
-        'class',
+        'class_id',
         'student_type',
         'gender',
         'residence_status',
@@ -32,31 +33,20 @@ class Student extends Model
         'student_type' => 'string',
         'gender' => 'string',
         'residence_status' => 'string',
-        'class' => 'string',
     ];
 
-    // Define available class options
-    public static function getClassOptions(): array
-    {
-        return [
-            'play' => 'Play',
-            'nursery' => 'Nursery',
-            'first' => 'First',
-            'second' => 'Second',
-            'third' => 'Third',
-            'fourth' => 'Fourth',
-            'nazira' => 'Nazira',
-            'hifzul_quran' => 'Hifzul Quran',
-        ];
-    }
-
-    // Get formatted class name
+    // Get formatted class name (now using relationship)
     public function getFormattedClassAttribute(): string
     {
-        return self::getClassOptions()[$this->class] ?? $this->class;
+        return $this->schoolClass?->name ?? 'N/A';
     }
 
     // Relationships
+    public function schoolClass(): BelongsTo
+    {
+        return $this->belongsTo(SchoolClass::class, 'class_id');
+    }
+
     public function addresses(): HasMany
     {
         return $this->hasMany(Address::class, 'student_id', 'student_id');

@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Carbon\Carbon;
 
 class Exam extends Model
 {
     protected $fillable = [
         'name',
-        'class',
+        'class_id',
         'session',
         'exam_date',
         'type',
@@ -22,8 +23,13 @@ class Exam extends Model
         'exam_date' => 'date',
         'type' => 'string',
         'status' => 'string',
-        'class' => 'string',
     ];
+
+    // Relationships
+    public function schoolClass(): BelongsTo
+    {
+        return $this->belongsTo(SchoolClass::class, 'class_id');
+    }
 
     // Relationship with results
     public function results(): HasMany
@@ -32,9 +38,9 @@ class Exam extends Model
     }
 
     // Scopes
-    public function scopeByClass($query, $class)
+    public function scopeByClass($query, $classId)
     {
-        return $query->where('class', $class);
+        return $query->where('class_id', $classId);
     }
 
     public function scopeBySession($query, $session)

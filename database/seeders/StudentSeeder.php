@@ -15,7 +15,7 @@ class StudentSeeder extends Seeder
         $students = [
             [
                 'session' => '2025',
-                'class' => 'play',
+                'class_id' => 1, // Play
                 'student_type' => 'new',
                 'gender' => 'male',
                 'residence_status' => 'resident',
@@ -31,7 +31,7 @@ class StudentSeeder extends Seeder
             ],
             [
                 'session' => '2025',
-                'class' => 'nursery',
+                'class_id' => 2, // Nursery
                 'student_type' => 'old',
                 'gender' => 'male',
                 'residence_status' => 'resident',
@@ -47,7 +47,7 @@ class StudentSeeder extends Seeder
             ],
             [
                 'session' => '2025',
-                'class' => 'first',
+                'class_id' => 3, // First
                 'student_type' => 'new',
                 'gender' => 'female',
                 'residence_status' => 'non-resident',
@@ -63,7 +63,7 @@ class StudentSeeder extends Seeder
             ],
             [
                 'session' => '2025',
-                'class' => 'nazira',
+                'class_id' => 7, // Nazira
                 'student_type' => 'old',
                 'gender' => 'male',
                 'residence_status' => 'resident',
@@ -79,7 +79,7 @@ class StudentSeeder extends Seeder
             ],
             [
                 'session' => '2025',
-                'class' => 'hifzul_quran',
+                'class_id' => 8, // Hifzul Quran
                 'student_type' => 'new',
                 'gender' => 'female',
                 'residence_status' => 'non-resident',

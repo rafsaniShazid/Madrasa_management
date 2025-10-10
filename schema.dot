@@ -42,6 +42,10 @@ digraph madrasa_management_er {
         students;
         addresses;
         fees;
+            subjects;
+            class_subject;
+            exams;
+            results;
     }
     
     subgraph cluster_auth {
@@ -50,4 +54,34 @@ digraph madrasa_management_er {
         fillcolor=lightgreen;
         users;
     }
+    // New entities
+    subjects [
+        label="{subjects|id (PK)\l|name\l|code (unique)\l|type (theory/practical)\l|total_marks\l|pass_marks\l|is_active\l|created_at\l|updated_at\l}",
+        fillcolor=lightgoldenrod
+    ];
+
+    class_subject [
+        label="{class_subject|id (PK)\l|class (enum)\l|subject_id (FK)\l|is_active\l|created_at\l|updated_at\l}",
+        fillcolor=lightgoldenrod1
+    ];
+
+    exams [
+        label="{exams|id (PK)\l|name\l|class (enum)\l|session\l|exam_date\l|type (first_term/second_term/final)\l|status (scheduled/ongoing/completed/cancelled)\l|description\l|created_at\l|updated_at\l}",
+        fillcolor=lightpink
+    ];
+
+    results [
+        label="{results|id (PK)\l|student_id (FK)\l|exam_id (FK)\l|subject_id (FK)\l|obtained_marks\l|total_marks\l|percentage\l|status (pass/fail)\l|remarks\l|created_at\l|updated_at\l}",
+        fillcolor=lightblue
+    ];
+
+    // New relationships
+    students -> results [label="1:N", color=blue, penwidth=2];
+    exams -> results [label="1:N", color=blue, penwidth=2];
+    subjects -> results [label="1:N", color=blue, penwidth=2];
+    
+    // Many-to-Many: Subjects <-> Classes (through class_subject pivot)
+    subjects -> class_subject [label="1:N", color=purple, penwidth=2, dir=both, arrowhead=crow, arrowtail=crow];
+    // Note: class_subject.class is enum (play, nursery, first, etc.)
+    // This creates M:N between subjects and class enum values
 }
