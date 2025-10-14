@@ -26,6 +26,7 @@ class Student extends Model
         'blood_group',
         'guardian_phone',
         'sms_number',
+        'is_active',
     ];
 
     protected $casts = [
@@ -33,6 +34,7 @@ class Student extends Model
         'student_type' => 'string',
         'gender' => 'string',
         'residence_status' => 'string',
+        'is_active' => 'boolean',
     ];
 
     // Get formatted class name (now using relationship)

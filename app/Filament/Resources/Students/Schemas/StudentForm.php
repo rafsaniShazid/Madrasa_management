@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Students\Schemas;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 
 class StudentForm
@@ -49,6 +50,12 @@ class StudentForm
                         'non-resident' => 'Day Scholar'
                     ])
                     ->required(),
+                
+                Toggle::make('is_active')
+                    ->label('Active Student')
+                    ->default(true)
+                    ->inline(false)
+                    ->helperText('Toggle to mark student as active or inactive'),
                 
                 DatePicker::make('date_of_birth')
                     ->required()

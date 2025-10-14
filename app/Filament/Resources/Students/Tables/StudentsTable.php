@@ -6,7 +6,9 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 class StudentsTable
@@ -49,6 +51,14 @@ class StudentsTable
                         default => 'gray',
                     })
                     ->formatStateUsing(fn (string $state): string => ucfirst(str_replace('_', ' ', $state))),
+                IconColumn::make('is_active')
+                    ->label('Active')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-check-circle')
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->trueColor('success')
+                    ->falseColor('danger')
+                    ->sortable(),
                 TextColumn::make('session')
                     ->searchable()
                     ->toggleable(),
@@ -95,7 +105,12 @@ class StudentsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                TernaryFilter::make('is_active')
+                    ->label('Active Status')
+                    ->placeholder('All students')
+                    ->trueLabel('Active students only')
+                    ->falseLabel('Inactive students only')
+                    ->default(),
             ])
             ->recordActions([
                 ViewAction::make(),

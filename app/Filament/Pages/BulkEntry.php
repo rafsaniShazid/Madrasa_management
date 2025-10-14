@@ -7,10 +7,12 @@ use App\Models\Subject;
 use App\Models\Student;
 use App\Models\Result;
 use App\Models\ClassSubject;
+use App\Models\SchoolClass;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Checkbox;
 use Filament\Schemas\Components\Section;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -38,49 +40,63 @@ class BulkEntry extends Page implements HasForms
     protected static ?int $navigationSort = 1;
 
     public ?array $data = [];
+    public $selectedClass = null;
     public $selectedExam = null;
     public $selectedSubject = null;
+    public $showActiveOnly = true;  // Show active students by default
     public $students = [];
 
     public function mount(): void
     {
-        $this->form->fill();
+        $this->form->fill([
+            'show_active_only' => true,
+        ]);
     }
 
     public function form(Schema $schema): Schema
     {
         return $schema
             ->schema([
-                Section::make('Exam & Subject Selection')
-                    ->description('Choose an exam and subject to load students and enter their marks')
+                Section::make('Class & Subject Selection')
+                    ->description('Choose a class to view active students, then select exam and subject to save marks')
                     ->schema([
-                        Forms\Components\Select::make('exam_id')
-                            ->label('Select Exam')
-                            ->options(Exam::all()->pluck('name', 'id'))
+                        Forms\Components\Select::make('class_id')
+                            ->label('Select Class')
+                            ->options(SchoolClass::all()->pluck('name', 'id'))
                             ->required()
                             ->reactive()
                             ->afterStateUpdated(function ($state, callable $set) {
-                                $this->selectedExam = $state;
+                                $this->selectedClass = $state;
+                                $set('exam_id', null);
                                 $set('subject_id', null);
                                 $this->loadStudents();
                             })
                             ->columnSpan(1),
 
+                        Forms\Components\Select::make('exam_id')
+                            ->label('Select Exam')
+                            ->options(Exam::where('status', 'completed')
+                                ->orderBy('exam_date', 'desc')
+                                ->pluck('name', 'id'))
+                            ->required()
+                            ->reactive()
+                            ->afterStateUpdated(function ($state) {
+                                $this->selectedExam = $state;
+                                $this->loadStudents();
+                            })
+                            ->helperText('Only completed exams are shown for mark entry')
+                            ->columnSpan(1),
+
                         Forms\Components\Select::make('subject_id')
                             ->label('Select Subject')
                             ->options(function (callable $get) {
-                                $examId = $get('exam_id');
-                                if (!$examId) {
+                                $classId = $get('class_id');
+                                if (!$classId) {
                                     return [];
                                 }
                                 
-                                $exam = Exam::find($examId);
-                                if (!$exam) {
-                                    return [];
-                                }
-
                                 // Get subjects for this class
-                                return ClassSubject::where('class_id', $exam->class_id)
+                                return ClassSubject::where('class_id', $classId)
                                     ->where('is_active', true)
                                     ->with('subject')
                                     ->get()
@@ -93,8 +109,19 @@ class BulkEntry extends Page implements HasForms
                                 $this->loadStudents();
                             })
                             ->columnSpan(1),
+
+                        Forms\Components\Checkbox::make('show_active_only')
+                            ->label('Show Active Students Only')
+                            ->default(true)
+                            ->reactive()
+                            ->afterStateUpdated(function ($state) {
+                                $this->showActiveOnly = $state;
+                                $this->loadStudents();
+                            })
+                            ->columnSpan(3)
+                            ->helperText('Filter to show only currently enrolled students'),
                     ])
-                    ->columns(2)
+                    ->columns(3)
                     ->collapsible(),
 
                 Section::make('Student Marks Entry')
@@ -139,30 +166,39 @@ class BulkEntry extends Page implements HasForms
 
     public function loadStudents()
     {
-        if (!$this->selectedExam || !$this->selectedSubject) {
+        if (!$this->selectedClass || !$this->selectedSubject) {
             $this->students = [];
             return;
         }
 
-        $exam = Exam::find($this->selectedExam);
+        $class = SchoolClass::find($this->selectedClass);
         $subject = Subject::find($this->selectedSubject);
 
-        if (!$exam || !$subject) {
+        if (!$class || !$subject) {
             $this->students = [];
             return;
         }
 
-        // Get all students in the exam's class
-        $students = Student::where('class_id', $exam->class_id)
-            ->orderBy('name')
-            ->get();
+        // Get all students in the selected class (not based on exam registration)
+        $studentsQuery = Student::where('class_id', $class->id);
+        
+        // Filter for active students only if checkbox is checked
+        if ($this->showActiveOnly) {
+            $studentsQuery->where('is_active', true);
+        }
+        
+        $students = $studentsQuery->orderBy('name')->get();
 
-        // Get existing results
-        $existingResults = Result::where('exam_id', $exam->id)
-            ->where('subject_id', $subject->id)
-            ->get()
-            ->keyBy('student_id');
+        // Get existing results if exam is selected
+        $existingResults = collect();
+        if ($this->selectedExam) {
+            $existingResults = Result::where('exam_id', $this->selectedExam)
+                ->where('subject_id', $subject->id)
+                ->get()
+                ->keyBy('student_id');
+        }
 
+        // Map students data
         $this->students = $students->map(function ($student) use ($existingResults, $subject) {
             $existingResult = $existingResults->get($student->student_id);
             

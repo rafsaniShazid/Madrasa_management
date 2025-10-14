@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('blood_group')->nullable();
             $table->string('guardian_phone')->required();
             $table->string('sms_number')->required();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }
