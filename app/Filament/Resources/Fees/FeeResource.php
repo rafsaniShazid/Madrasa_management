@@ -15,12 +15,17 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class FeeResource extends Resource
 {
     protected static ?string $model = Fee::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBanknotes;
+
+    protected static ?string $navigationLabel = 'Admission Fees';
+    protected static ?string $label = 'Admission Fees';
+    protected static string|UnitEnum|null $navigationGroup = 'Finance';
 
     protected static ?string $recordTitleAttribute = 'total_fees';
 

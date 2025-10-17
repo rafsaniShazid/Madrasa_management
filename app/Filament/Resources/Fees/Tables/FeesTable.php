@@ -17,6 +17,7 @@ class FeesTable
             ->columns([
                 TextColumn::make('student.name')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
                 TextColumn::make('admit_form_fee')
                     ->numeric()

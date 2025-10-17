@@ -31,7 +31,7 @@ class BulkEntry extends Page implements HasForms
     
     protected string $view = 'filament.pages.bulk-entry';
     
-    protected static ?string $navigationLabel = 'Bulk Mark Entry';
+    protected static ?string $navigationLabel = 'Mark Entry';
     
     protected static ?string $title = 'Enter Student Marks';
     

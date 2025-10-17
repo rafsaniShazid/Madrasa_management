@@ -28,7 +28,7 @@ class ExamResults extends Page implements HasForms
     
     protected string $view = 'filament.pages.exam-results';
     
-    protected static ?string $navigationLabel = 'Exam Results';
+    protected static ?string $navigationLabel = 'Results';
     
     protected static ?string $title = 'View Exam Results';
     

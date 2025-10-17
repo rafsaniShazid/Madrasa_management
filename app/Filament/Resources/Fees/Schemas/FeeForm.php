@@ -12,9 +12,13 @@ class FeeForm
     {
         return $schema
             ->components([
-                Select::make('student_id')
-                    ->relationship('student', 'name')
-                    ->required(),
+                TextInput::make('student_id')
+                    ->required()
+                    ->numeric()
+                    ->rules(['exists:students,student_id'])
+                    ->validationMessages([
+                        'exists' => 'Student not found with this ID.',
+                    ]),
                 TextInput::make('admit_form_fee')
                     ->required()
                     ->numeric()
