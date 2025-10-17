@@ -2,6 +2,8 @@
 
 namespace App\Filament\Pages;
 
+use Barryvdh\DomPDF\Facade\Pdf;
+
 use App\Models\Exam;
 use App\Models\Result;
 use App\Models\Student;
@@ -161,5 +163,28 @@ class ExamResults extends Page implements HasForms
         
         $exam = Exam::find($this->selectedExam);
         return $exam ? $exam->name : null;
+    }
+
+    public function downloadResultsPdf()
+    {
+        if (!$this->selectedExam || empty($this->resultsData)) {
+            return;
+        }
+
+        $exam = Exam::find($this->selectedExam);
+        $examName = $exam ? $exam->name : 'Exam Results';
+
+        $pdf = Pdf::loadView('pdf.exam-results-summary', [
+            'resultsData' => $this->resultsData,
+            'subjects' => $this->subjects,
+            'examName' => $examName,
+            'exam' => $exam,
+        ]);
+
+        $pdf->setPaper('a4', 'landscape');
+
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->output();
+        }, 'exam_results_' . str_replace(' ', '_', $examName) . '.pdf');
     }
 }

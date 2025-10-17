@@ -16,6 +16,12 @@
                     {{ count($resultsData) }} students found
                 </x-slot>
 
+                <div class="flex justify-end mb-4">
+                    <x-filament::button wire:click="downloadResultsPdf" color="success" size="sm">
+                        Download PDF Report
+                    </x-filament::button>
+                </div>
+
                 <!-- Filament Table -->
                 <div class="overflow-x-auto">
                     <table class="fi-ta-table w-full table-auto divide-y divide-gray-200 dark:divide-white/10">
