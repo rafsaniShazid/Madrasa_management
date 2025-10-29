@@ -9,10 +9,6 @@ use App\Models\Result;
 use App\Models\ClassSubject;
 use App\Models\SchoolClass;
 use Filament\Forms;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Checkbox;
 use Filament\Schemas\Components\Section;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -37,7 +33,7 @@ class BulkEntry extends Page implements HasForms
     
     protected static string|UnitEnum|null $navigationGroup = 'Academic';
     
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 2;
 
     public ?array $data = [];
     public $selectedClass = null;
@@ -58,7 +54,7 @@ class BulkEntry extends Page implements HasForms
         return $schema
             ->schema([
                 Section::make('Class & Subject Selection')
-                    ->description('Choose a class to view active students, then select exam and subject to save marks')
+                    ->description('Choose a class to view active students,then select exam and subject to save marks')
                     ->schema([
                         Forms\Components\Select::make('class_id')
                             ->label('Select Class')

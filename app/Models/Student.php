@@ -64,6 +64,16 @@ class Student extends Model
         return $this->hasMany(Result::class, 'student_id', 'student_id');
     }
 
+    public function meals(): HasMany
+    {
+        return $this->hasMany(Meal::class, 'student_id', 'student_id');
+    }
+
+    public function mealBills(): HasMany
+    {
+        return $this->hasMany(MealBill::class, 'student_id', 'student_id');
+    }
+
     // Accessor methods
     public function getPermanentAddressAttribute()
     {
