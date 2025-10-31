@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             ClassSubjectSeeder::class,
             ExamSeeder::class,
             ResultSeeder::class,
+            MealRateSeeder::class,
         ]);
 
         // Create admin user for Filament

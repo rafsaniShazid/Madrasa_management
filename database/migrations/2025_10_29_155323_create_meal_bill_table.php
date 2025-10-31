@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('meal_bill', function (Blueprint $table) {
+        Schema::create('meal_bills', function (Blueprint $table) {
             $table->id();
             $table->foreignId('student_id')->constrained('students', 'student_id')->onDelete('cascade');
             $table->string('month', 7); // Format: YYYY-MM
