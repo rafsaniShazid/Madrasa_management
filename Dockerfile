@@ -1,5 +1,6 @@
-# Use PHP 8.2 with Apache
-FROM php:8.2-apache
+# Use PHP 8.3 with Apache
+FROM php:8.3-apache
+
 
 WORKDIR /var/www/html
 
