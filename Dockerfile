@@ -1,6 +1,7 @@
 # Use PHP 8.3 with Apache
 FROM php:8.3-apache
 
+
 WORKDIR /var/www/html
 
 # Install system dependencies and PHP extensions
