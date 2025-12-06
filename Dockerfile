@@ -1,5 +1,5 @@
-# Use PHP 8.2 with Apache
-FROM php:8.2-apache
+# Use PHP 8.3 with Apache
+FROM php:8.3-apache
 
 WORKDIR /var/www/html
 
@@ -43,9 +43,6 @@ EXPOSE 80
 RUN echo '#!/bin/bash\n\
 set -e\n\
 echo "Waiting for database..."\n\
-while ! mysqladmin ping -h"$DB_HOST" -P"$DB_PORT" -u"$DB_USERNAME" -p"$DB_PASSWORD" --silent; do\n\
-  sleep 2\n\
-done\n\
 php artisan config:cache\n\
 php artisan route:cache\n\
 php artisan view:cache\n\
