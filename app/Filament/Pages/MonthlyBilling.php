@@ -29,6 +29,8 @@ class MonthlyBilling extends Page implements HasForms, HasTable
 
     protected static ?int $navigationSort = 4;
 
+    protected string $view = 'filament.pages.monthly-billing';
+
     public ?string $selectedMonth = null;
 
     public function mount(): void
@@ -56,12 +58,9 @@ class MonthlyBilling extends Page implements HasForms, HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->query(function (Builder $query) {
-                if ($this->selectedMonth) {
-                    $query->where('month', $this->selectedMonth);
-                } else {
-                    $query->where('month', now()->format('Y-m'));
-                }
+            ->query(function () {
+                $month = $this->selectedMonth ?? now()->format('Y-m');
+                return MealBill::query()->where('month', $month);
             })
             ->columns([
                 TextColumn::make('student.name')

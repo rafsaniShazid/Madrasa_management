@@ -21,8 +21,6 @@ class MealBillResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'student.name';
-
     protected static ?string $navigationLabel = 'Meal Bills';
 
     protected static ?string $modelLabel = 'Meal Bill';
