@@ -14,8 +14,8 @@ php artisan view:cache
 # Run migrations
 php artisan migrate --force
 
-# Create admin user
-php artisan admin:create --name="Admin" --email="admin@madrasa.com" --password="admin123456"
+# Run admin seeder (creates admin user automatically)
+php artisan db:seed --class=AdminSeeder --force
 
 # Set proper permissions
 chown -R www-data:www-data storage bootstrap/cache

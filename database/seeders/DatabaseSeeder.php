@@ -13,22 +13,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
-            SchoolClassSeeder::class, // Must run first!
-            StudentSeeder::class,
-            AddressSeeder::class,
-            FeeSeeder::class,
-            SubjectSeeder::class,
-            ClassSubjectSeeder::class,
-            ExamSeeder::class,
-            ResultSeeder::class,
-            MealRateSeeder::class,
-        ]);
+        // Always create admin user first (works in all environments)
+        $this->call(AdminSeeder::class);
 
-        // Create admin user for Filament
-        User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@madrasa.com',
-        ]);
+        // Only seed test data in development
+        if (app()->environment(['local', 'development'])) {
+            $this->call([
+                SchoolClassSeeder::class, // Must run first!
+                StudentSeeder::class,
+                AddressSeeder::class,
+                FeeSeeder::class,
+                SubjectSeeder::class,
+                ClassSubjectSeeder::class,
+                ExamSeeder::class,
+                ResultSeeder::class,
+                MealRateSeeder::class,
+            ]);
+        }
     }
 }
