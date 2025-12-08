@@ -16,40 +16,20 @@ class MealBillForm
             ->components([
                 Select::make('student_id')
                     ->label('Student')
-                    ->options(Student::all()->pluck('name', 'student_id'))
+                    ->options(Student::all()->mapWithKeys(function ($student) {
+                        return [$student->student_id => "ID: {$student->student_id} - {$student->name}"];
+                    }))
                     ->required()
-                    ->searchable(),
+                    ->searchable()
+                    ->placeholder('Search by Student ID or Name'),
 
                 DatePicker::make('month')
                     ->label('Month')
-                    ->displayFormat('Y-m')
+                    ->displayFormat('M Y')
                     ->format('Y-m')
                     ->required()
-                    ->default(now()->format('Y-m')),
-
-                TextInput::make('total_amount')
-                    ->label('Total Amount')
-                    ->numeric()
-                    ->prefix('৳')
-                    ->required()
-                    ->minValue(0)
-                    ->step(0.01),
-
-                TextInput::make('discount')
-                    ->label('Discount')
-                    ->numeric()
-                    ->prefix('৳')
-                    ->default(0)
-                    ->minValue(0)
-                    ->step(0.01),
-
-                TextInput::make('paid_amount')
-                    ->label('Paid Amount')
-                    ->numeric()
-                    ->prefix('৳')
-                    ->default(0)
-                    ->minValue(0)
-                    ->step(0.01),
+                    ->default(now()->format('Y-m'))
+                    ->helperText('Meal bill will be created for this month'),
             ]);
     }
 }
