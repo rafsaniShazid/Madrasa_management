@@ -27,6 +27,7 @@ class adminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('/admin')
             ->login()
+            ->emailVerification(false)
             ->brandName('Madrasa Management')
             // ->brandLogo(asset('images/logo.png'))  // You can add a logo later
             ->brandLogoHeight('2rem')
