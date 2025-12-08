@@ -1,8 +1,8 @@
 <?php
-// admin-setup.php - Place this in your public folder temporarily
+// admin-setup.php - Upload this to Sevalla public folder temporarily
 
-// Basic security check
-if (!isset($_GET['secret']) || $_GET['secret'] !== 'your-secret-key-here') {
+// Basic security - change this secret!
+if (!isset($_GET['secret']) || $_GET['secret'] !== 'madrasa2024setup') {
     die('Access denied');
 }
 
@@ -11,27 +11,29 @@ require __DIR__ . '/../vendor/autoload.php';
 $app = require_once __DIR__ . '/../bootstrap/app.php';
 $app->boot();
 
-// Create admin user
+echo "<h2>🏫 Madrasa Management System - Admin Setup</h2>";
+
 try {
-    $user = \App\Models\User::firstOrCreate(
+    // Create/update admin user
+    $user = \App\Models\User::updateOrCreate(
         ['email' => 'admin@madrasa.com'],
         [
             'name' => 'Admin',
-            'password' => bcrypt('password'),
+            'password' => bcrypt('admin123456'),
             'email_verified_at' => now(),
         ]
     );
     
-    echo "✅ Admin user created/updated successfully!<br>";
-    echo "📧 Email: admin@madrasa.com<br>";
-    echo "🔑 Password: password<br>";
-    echo "<br>🌐 <a href='/admin'>Login to Admin Panel</a>";
+    echo "✅ <strong>Admin user created successfully!</strong><br><br>";
+    echo "📧 <strong>Email:</strong> admin@madrasa.com<br>";
+    echo "🔑 <strong>Password:</strong> admin123456<br><br>";
+    echo "🌐 <a href='/admin' style='background: #0066cc; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>Login to Admin Panel</a><br><br>";
     
-    // Delete this file for security
-    unlink(__FILE__);
-    echo "<br><br>⚠️ This setup file has been deleted for security.";
+    // Security: Delete this file after use
+    echo "⚠️ <em>Remember to delete this file after use for security!</em>";
     
 } catch (Exception $e) {
-    echo "❌ Error: " . $e->getMessage();
+    echo "❌ <strong>Error:</strong> " . $e->getMessage() . "<br>";
+    echo "Check your database connection and try again.";
 }
 ?>
