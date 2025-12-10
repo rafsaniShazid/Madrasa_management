@@ -17,11 +17,11 @@ class AdminSeeder extends Seeder
             ['email' => 'admin@madrasa.com'],
             [
                 'name' => 'Admin',
-                'password' => Hash::make('admin123456'),
+                'password' => Hash::make('password'),
                 'email_verified_at' => now(),
             ]
         );
 
-        $this->command->info('✅ Admin user created: admin@madrasa.com');
+        $this->command->info('✅ Admin user created: admin@madrasa.com (password: password)');
     }
 }
